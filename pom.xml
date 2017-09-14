@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.example</groupId>
+	<artifactId>awssqs</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
+
+	<name>awssqs</name>
+	<description>Demo project for Spring Boot</description>
+
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>1.5.6.RELEASE</version>
+		<relativePath/> <!-- lookup parent from repository -->
+	</parent>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<java.version>1.8</java.version>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-jms</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.amazonaws</groupId>
+			<artifactId>aws-java-sdk</artifactId>
+			<version>1.9.6</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.amazonaws</groupId>
+			<artifactId>amazon-sqs-java-messaging-lib</artifactId>
+			<version>1.0.0</version>
+			<type>jar</type>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-aws-messaging</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-aws-autoconfigure</artifactId>
+			<version>{spring-cloud-version}</version>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<configuration>
+					<delimiters>
+						<delimiter>@</delimiter>
+					</delimiters>
+					<useDefaultDelimiters>false</useDefaultDelimiters>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>rpm-maven-plugin</artifactId>
+				<version>2.1.4</version>
+				<configuration>
+					<group>development</group>
+					<description>${project.artifactId} rpm</description>
+					<defaultDirmode>775</defaultDirmode>
+					<defaultFilemode>664</defaultFilemode>
+					<defineStatements>
+						<defineStatement>_binaries_in_noarch_packages_terminate_build 0</defineStatement>
+					</defineStatements>
+					<mappings>
+						<mapping>
+							<directory>/data/projects</directory>
+						</mapping>
+						<mapping>
+							<directory>/data/projects/${project.artifactId}</directory>
+							<sources>
+								<source>
+									<location>${project.build.directory}/${project.artifactId}.jar</location>
+								</source>
+							</sources>
+						</mapping>
+						<mapping>
+							<directory>/data/logs/${project.artifactId}</directory>
+							<filemode>775</filemode>
+						</mapping>
+						<mapping>
+							<directory>/data/projects/${project.artifactId}/tmp</directory>
+							<sources>
+								<source>
+									<location>config</location>
+								</source>
+							</sources>
+						</mapping>
+					</mappings>
+					<postinstallScriptlet>
+						<script><![CDATA[chmod +x /data/projects/${project.artifactId}/${project.artifactId}.jar]]></script>
+					</postinstallScriptlet>
+				</configuration>
+			</plugin>
+		</plugins>
+
+	</build>
+
+
+</project>
